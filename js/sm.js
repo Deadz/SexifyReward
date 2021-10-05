@@ -204,5 +204,5 @@ function Sexify_step2(d)
 	});
 	$("#spin").addClass(" w3-hide");
 	$("#popoNco").removeClass(" w3-hide");
-	$("#money").html("<div class='w3-center w3-xxlarge'>Soit, <b>"+$coffre+"</b> coffre(s) d'une valeur de : <b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></div>");
+	$("#money").html("<div class='w3-section w3-center w3-xlarge'>So, <b>"+$coffre+"</b> chest(s) valued at : <b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></div>");
 }
