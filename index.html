@@ -11,7 +11,7 @@
   </head>
   <body class="w3-black">
     <div class="w3-main">
-      <div class="w3-row-padding">
+      <div class="w3-container w3-dark-grey w3-row-padding w3-bottombar w3-border-white">
         <form class="w3-container w3-half w3-padding-large" id="pseudo_form" method="post" onsubmit="Sexify()">
           <div class="w3-row w3-section">
             <label class="w3-col" style="width:50px" for="pseudo"><i class="w3-xxlarge fa fa-user"></i></label>
@@ -25,10 +25,15 @@
         <div class="w3-half w3-padding-large">
           <p>This dapp allows us to display our rewards in a more compact way. And with some extra info!</p>
           <p><b>No connection required</b>, we only need your username to retrieve information about your rewards.</p>
+          <h5 class="w3-right w3-padding-large">
+            Made with <b>love</b> <i class="far fa-heart w3-text-red"></i>, by <a href="https://peakd.com/@deadzy">@deadzy</a>.
+          </h5>
         </div>
       </div>
-      <hr>
       <br /><br />
+      <div id="img_splinter" class="w3-center">
+        <img class="w3-image" src="https://d36mxiodymuqjm.cloudfront.net/website/home/splinterlands_logo_fx_1000.png">
+      </div>
       <div class="w3-center w3-row" id="card_view"></div>
       <br />
       <div id="popoNco" class="w3-row w3-hide">
@@ -55,8 +60,6 @@
       </div>
       <div id="money"></div>
       <p id="spin" class="w3-center w3-hide"><img src="https://d36mxiodymuqjm.cloudfront.net/website/loading-spinner_500.gif"></p>
-      <h5 class="w3-right w3-padding-large">Made with <b>love</b> <i class="far fa-heart w3-text-red"></i>, by <a href="https://peakd.com/@deadzy">@deadzy</a>.</h5>
-
     </div>
   </body>
 </html>

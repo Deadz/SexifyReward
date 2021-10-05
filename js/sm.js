@@ -64,6 +64,7 @@ function loadCheck()
 function Sexify()
 {
 	$("#spin").removeClass(" w3-hide");
+	$("#img_splinter").addClass(" w3-hide");
 	event.preventDefault();
    if($("input").first().val() !== "")
    {
