@@ -113,7 +113,7 @@ function Sexify_step2(d)
 		   case 'dec':
 		   	$dec = $dec+item.quantity;
 		   break;
-		   case 'credit':
+		   case 'credits':
 		   	$credit = $credit+item.quantity;
 		   break;
 		}
