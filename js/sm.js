@@ -1,6 +1,10 @@
 $limit = 1;
 $url   = "https://d36mxiodymuqjm.cloudfront.net/cards_by_level/reward/";
 
+// Data load check
+dt_pv = false; // Data Prix de vente
+dt_dc = false; // Data DEC
+dt_ct = false; // Data Cartes
 
 $.ajax( // Prix de vente des cartes rewards
 {
@@ -10,6 +14,8 @@ $.ajax( // Prix de vente des cartes rewards
 	success: function(datas)
 	{
 		prices = datas.filter(obj => obj.edition == 3);
+		dt_pv = true;
+		loadCheck();
 	}
 });
 
@@ -21,6 +27,8 @@ $.ajax( // Prix du DEC
 	success: function(datas)
 	{
 		$decPrice = datas.dec;
+		dt_dc = true;
+		loadCheck();
 	}
 });
 
@@ -32,6 +40,8 @@ $.ajax( // Nom des cartes + d'autres data
 	success: function(datas)
 	{
 		nameinfo = datas.filter(obj => obj.editions == 3);
+		dt_ct = true;
+		loadCheck();
 	}
 });
 
@@ -43,6 +53,14 @@ function encodeURL(str)
   	});
 }
 
+function loadCheck()
+{
+	if(dt_ct && dt_dc && dt_pv)
+	{
+		$("#sub").removeProp("disabled");
+	}
+}
+
 function Sexify()
 {
 	$("#spin").removeClass(" w3-hide");
@@ -50,6 +68,7 @@ function Sexify()
    if($("input").first().val() !== "")
    {
   		$pseudo = $("input").first().val();
+  		$pseudo = $pseudo.toLowerCase();
   		$.ajax( // Nombre de DEC dans la reward pool
 		{
 			url: 'https://api.steemmonsters.io/players/history?username='+$pseudo+'&types=claim_reward&limit='+$limit,
@@ -57,6 +76,7 @@ function Sexify()
 			type : 'GET',
 			success: function(datas)
 			{
+				console.log(datas);
 				Sexify_step2(datas);
 			}
 		});
@@ -124,6 +144,7 @@ function Sexify_step2(d)
 	$("div.w3-quarter").removeClass(" w3-grayscale-max");
 	$("div.w3-quarter > b").html("");
 	$("#card_view").html("");
+	$("#money").html("");
 	imgbonus = "";
 	$value   = "";
 
@@ -178,10 +199,9 @@ function Sexify_step2(d)
 		   break;
 		}
 
-		$("#card_view").append("<div class='w3-col s2'><div class='w3-display-container' style='min-width:200px; min-height:314px'>"+imgbonus+"<img width='190px;' src='"+$url+card.img+"' class='w3-display-topmiddle'><b style='writing-mode: vertical-rl; text-orientation: sideways-left;' class='w3-xlarge w3-display-right'>"+$qt+"</b></div></div>");
+		$("#card_view").append("<div class='w3-col l2 m3 s6'><div class='w3-display-container' style='min-width:200px; min-height:314px'>"+imgbonus+"<img width='190px;' src='"+$url+card.img+"' class='w3-display-topmiddle'><b style='writing-mode: vertical-rl; text-orientation: sideways-left;' class='w3-xlarge w3-display-topright'>"+$qt+"</b></div></div>");
 	});
 	$("#spin").addClass(" w3-hide");
 	$("#popoNco").removeClass(" w3-hide");
-	$("#popoNco").append("<div class='w3-center w3-xxlarge'>Soit, <b>"+$coffre+"</b> coffre(s) pour une valeur de : <b>"+$value.toFixed(2)+"</b>$</div>");
-	console.log($value+"$");
+	$("#money").html("<div class='w3-center w3-xxlarge'>Soit, <b>"+$coffre+"</b> coffre(s) d'une valeur de : <b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></div>");
 }
