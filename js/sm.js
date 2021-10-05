@@ -63,8 +63,11 @@ function loadCheck()
 
 function Sexify()
 {
-	$("#spin").removeClass(" w3-hide");
 	$("#img_splinter").addClass(" w3-hide");
+	$("#popoNco").addClass(" w3-hide");
+	$("#card_view").html("");
+	$("#money").html("");
+	$("#spin").removeClass(" w3-hide");
 	event.preventDefault();
    if($("input").first().val() !== "")
    {
@@ -144,8 +147,6 @@ function Sexify_step2(d)
 
 	$("div.w3-quarter").removeClass(" w3-grayscale-max");
 	$("div.w3-quarter > b").html("");
-	$("#card_view").html("");
-	$("#money").html("");
 	imgbonus = "";
 	$value   = "";
 
