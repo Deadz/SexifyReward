@@ -1,4 +1,4 @@
-$limit = 1;
+$limit = 10;
 $url   = "https://d36mxiodymuqjm.cloudfront.net/cards_by_level/reward/";
 
 // Data load check
@@ -53,7 +53,7 @@ function encodeURL(str)
   	});
 }
 
-function loadCheck()
+function loadCheck() // On active le bouton si les datas sont chargées
 {
 	if(dt_ct && dt_dc && dt_pv)
 	{
@@ -63,33 +63,51 @@ function loadCheck()
 
 function Sexify()
 {
+	// Reset
 	$("#img_splinter").addClass(" w3-hide");
-	$("#popoNco").addClass(" w3-hide");
 	$("#card_view").html("");
 	$("#money").html("");
 	$("#spin").removeClass(" w3-hide");
+
 	event.preventDefault();
-   if($("input").first().val() !== "")
+
+   if($("#pseudo").val() !== "")
    {
-  		$pseudo = $("input").first().val();
+  		$pseudo = $("#pseudo").val();
   		$pseudo = $pseudo.toLowerCase();
-  		$.ajax( // Nombre de DEC dans la reward pool
+  		$.ajax(
 		{
 			url: 'https://api.steemmonsters.io/players/history?username='+$pseudo+'&types=claim_reward&limit='+$limit,
 			dataType: 'json',
 			type : 'GET',
 			success: function(datas)
 			{
-				console.log(datas);
-				Sexify_step2(datas);
+				dataclean = datas.filter(obj => obj.error === null)
+				Sexify_view(0);
 			}
 		});
    }
 };
 
-function Sexify_step2(d)
+function Sexify_view(idReward)
 {
-	$datadecode = JSON.parse(d[0].result);
+	$("#img_splinter").addClass(" w3-hide");
+	$("#card_view").html("");
+	$("#money").html("");
+	if(idReward === 0)
+	{
+		$("#menu").html("<button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> last</button><button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled>next <i class='far fa-arrow-alt-circle-right'></i></button>");
+	}
+	else if(idReward === (dataclean.length-1))
+	{
+		$("#menu").html("<button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled><i class='far fa-arrow-alt-circle-left'></i> last</button><button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>next <i class='far fa-arrow-alt-circle-right'></i></button>");
+	}
+	else
+	{
+		$("#menu").html("<button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> last</button><button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>next <i class='far fa-arrow-alt-circle-right'></i></button>");
+	}
+
+	$datadecode = JSON.parse(dataclean[idReward].result);
 	$popoLeg = 0;
 	$popoAlc = 0;
 	$dec     = 0;
@@ -143,34 +161,22 @@ function Sexify_step2(d)
 		}
 	});
 
-	// Reset
-
-	$("div.w3-quarter").removeClass(" w3-grayscale-max");
-	$("div.w3-quarter > b").html("");
 	imgbonus = "";
 	$value   = "";
 
 	// Mise en page
 
 	if($dec > 0)
-		$("#nbr_dec").html("<i class='fas fa-times'></i> "+$dec);
-	else
-		$("#nbr_dec").parent().addClass(" w3-grayscale-max");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/icons/img_dec_fx_256.png'><b class='w3-xlarge w3-display-topmiddle'>DEC(s) <i class='fas fa-times'></i> "+$dec+"</b></div>");
 
 	if($popoLeg > 0)
-		$("#nbr_leg").html("<i class='fas fa-times'></i> "+$popoLeg);
-	else
-		$("#nbr_leg").parent().addClass(" w3-grayscale-max");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/icons/icon_potion_legendary.png'><b class='w3-xlarge w3-display-topmiddle'> Legendary(s)<i class='fas fa-times'></i> "+$popoLeg+"</b></div>");
 
 	if($popoAlc > 0)
-		$("#nbr_alc").html("<i class='fas fa-times'></i> "+$popoAlc);
-	else
-		$("#nbr_alc").parent().addClass(" w3-grayscale-max");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/icons/icon_potion_alchemy.png'><b class='w3-xlarge w3-display-topmiddle'> Alchemy(s)<i class='fas fa-times'></i> "+$popoAlc+"</b></div>");
 
 	if($credit > 0)
-		$("#nbr_cre").html("<i class='fas fa-times'></i> "+$credit);
-	else
-		$("#nbr_cre").parent().addClass(" w3-grayscale-max");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/ui_elements/shop/img_credits.png'><b class='w3-xlarge w3-display-topmiddle'> Credit(s)<i class='fas fa-times'></i> "+$credit+"</b></div>");
 
 	$value = ($dec*$decPrice)+($credit/1000)+($popoLeg*0.04)+($popoAlc*0.05);
 
@@ -179,7 +185,7 @@ function Sexify_step2(d)
 		$value = $value+(card.qt*card.price);
 		if(card.qt > 1)
 		{
-			$qt = "<i class='fas fa-times'></i> "+card.qt;
+			$qt = "<img src='https://d36mxiodymuqjm.cloudfront.net/website/qty-banner.png' class='w3-display-topright' style='max-height:60px;'><b class='w3-xlarge w3-display-topright w3-margin-right'>"+card.qt+"</b>";
 		}
 		else
 		{
@@ -201,9 +207,8 @@ function Sexify_step2(d)
 		   break;
 		}
 
-		$("#card_view").append("<div class='w3-col l2 m3 s6'><div class='w3-display-container' style='min-width:200px; min-height:314px'>"+imgbonus+"<img width='190px;' src='"+$url+card.img+"' class='w3-display-topmiddle'><b style='writing-mode: vertical-rl; text-orientation: sideways-left;' class='w3-xlarge w3-display-topright'>"+$qt+"</b></div></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'>"+imgbonus+"<img width='190px;' src='"+$url+card.img+"' class='w3-display-topmiddle'>"+$qt+"</div>");
 	});
 	$("#spin").addClass(" w3-hide");
-	$("#popoNco").removeClass(" w3-hide");
-	$("#money").html("<div class='w3-section w3-center w3-xlarge'>So, <b>"+$coffre+"</b> chest(s) valued at : <b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></div>");
+	$("#card_view").append("<div class='w3-display-container w3-leftbar w3-border-red' style='min-width:200px; width:200px; min-height:314px'><b class='w3-display-topmiddle w3-xlarge'>Chest(s) <i class='fas fa-times'></i> "+$coffre+"</b><img width='190px;' src='https://d36mxiodymuqjm.cloudfront.net/website/misc/loot-chest_open_250.png' class='w3-display-middle'><p class='w3-display-bottommiddle w3-xlarge'>(<b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i>)</p></div>");
 }
