@@ -1,5 +1,7 @@
-$limit = 10;
-$url   = "https://d36mxiodymuqjm.cloudfront.net/cards_by_level/reward/";
+$limit  = 15;
+$url    = "https://d36mxiodymuqjm.cloudfront.net/cards_by_level/reward/";
+$link   = "https://d36mxiodymuqjm.cloudfront.net/";
+$pseudo = "";
 
 // Data load check
 dt_pv = false; // Data Prix de vente
@@ -53,6 +55,24 @@ function encodeURL(str)
   	});
 }
 
+document.onkeydown = checkKey;
+function checkKey(e)
+{
+   e = e || window.event;
+
+   if($pseudo != "")
+   {
+   	if(e.keyCode == '37')
+		{
+	      $("#btn_left").click();
+	   }
+	   else if(e.keyCode == '39')
+	   {
+	   	$("#btn_right").click();
+	   }
+   }
+}
+
 function loadCheck() // On active le bouton si les datas sont chargées
 {
 	if(dt_ct && dt_dc && dt_pv)
@@ -61,12 +81,25 @@ function loadCheck() // On active le bouton si les datas sont chargées
 	}
 }
 
+function cheeeeeese()
+{
+	event.preventDefault();
+	html2canvas(document.querySelector("#screen"),
+	{
+	   allowTaint : true,
+	   width : "1100",
+	   windowWidth : "1100"
+	}).then(canvas =>
+	{
+		$("#copy").html(canvas);
+		document.getElementById('view_screen').style.display='block';
+	});
+}
+
 function Sexify()
 {
 	// Reset
-	$("#img_splinter").addClass(" w3-hide");
 	$("#card_view").html("");
-	$("#money").html("");
 	$("#spin").removeClass(" w3-hide");
 
 	event.preventDefault();
@@ -82,31 +115,37 @@ function Sexify()
 			type : 'GET',
 			success: function(datas)
 			{
-				dataclean = datas.filter(obj => obj.error === null)
-				Sexify_view(0);
-			}
+				if(datas.length < 1)
+				{
+					$("#card_view").html("<div class='w3-panel w3-yellow w3-display-container'><span onclick='this.parentElement.style.display=\"none\"' class='w3-button w3-large w3-display-topright'>&times;</span><h3>Warning!</h3><p>This player name doesn\'t exist ! Try another one.</p></div>");
+				}
+				else
+				{
+					dataclean = datas.filter(obj => obj.error === null);
+					Sexify_view(0);
+				}
+			}     
 		});
    }
 };
 
 function Sexify_view(idReward)
 {
-	$("#img_splinter").addClass(" w3-hide");
 	$("#card_view").html("");
-	$("#money").html("");
 	if(idReward === 0)
 	{
-		$("#menu").html("<button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> last</button><button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled>next <i class='far fa-arrow-alt-circle-right'></i></button>");
+		$("#menu").html("<button id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> Prev.</button><button id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled>Next <i class='far fa-arrow-alt-circle-right'></i></button>");
 	}
 	else if(idReward === (dataclean.length-1))
 	{
-		$("#menu").html("<button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled><i class='far fa-arrow-alt-circle-left'></i> last</button><button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>next <i class='far fa-arrow-alt-circle-right'></i></button>");
+		$("#menu").html("<button id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled><i class='far fa-arrow-alt-circle-left'></i> Prev.</button><button id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>Next <i class='far fa-arrow-alt-circle-right'></i></button>");
 	}
 	else
 	{
-		$("#menu").html("<button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> last</button><button class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>next <i class='far fa-arrow-alt-circle-right'></i></button>");
+		$("#menu").html("<button id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> Prev.</button><button id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>Next <i class='far fa-arrow-alt-circle-right'></i></button>");
 	}
 
+	$typequest  = JSON.parse(dataclean[idReward].data).type;
 	$datadecode = JSON.parse(dataclean[idReward].result);
 	$popoLeg = 0;
 	$popoAlc = 0;
@@ -166,17 +205,29 @@ function Sexify_view(idReward)
 
 	// Mise en page
 
+	switch($typequest)
+	{
+		case 'league_season':
+			$("#type_quest").html("<i class='fas fa-gifts'></i> Season Rewards :");
+		break;
+
+		case 'quest':
+			$("#type_quest").html("<i class='fas fa-gift'></i> Daily Quest :");
+		break;
+
+	}
+
 	if($dec > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/icons/img_dec_fx_256.png'><b class='w3-xlarge w3-display-topmiddle'>DEC(s) <i class='fas fa-times'></i> "+$dec+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/icons/img_dec_fx_256.png'><b class='w3-xlarge w3-display-topmiddle'>DEC(s) <i class='fas fa-times'></i> "+$dec+"</b></div>");
 
 	if($popoLeg > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/icons/icon_potion_legendary.png'><b class='w3-xlarge w3-display-topmiddle'> Legendary(s)<i class='fas fa-times'></i> "+$popoLeg+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/icons/icon_potion_legendary.png'><b class='w3-xlarge w3-display-topmiddle'> Legendary(s)<i class='fas fa-times'></i> "+$popoLeg+"</b></div>");
 
 	if($popoAlc > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/icons/icon_potion_alchemy.png'><b class='w3-xlarge w3-display-topmiddle'> Alchemy(s)<i class='fas fa-times'></i> "+$popoAlc+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/icons/icon_potion_alchemy.png'><b class='w3-xlarge w3-display-topmiddle'> Alchemy(s)<i class='fas fa-times'></i> "+$popoAlc+"</b></div>");
 
 	if($credit > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='https://d36mxiodymuqjm.cloudfront.net/website/ui_elements/shop/img_credits.png'><b class='w3-xlarge w3-display-topmiddle'> Credit(s)<i class='fas fa-times'></i> "+$credit+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/ui_elements/shop/img_credits.png'><b class='w3-xlarge w3-display-topmiddle'> Credit(s)<i class='fas fa-times'></i> "+$credit+"</b></div>");
 
 	$value = ($dec*$decPrice)+($credit/1000)+($popoLeg*0.04)+($popoAlc*0.05);
 
@@ -185,7 +236,7 @@ function Sexify_view(idReward)
 		$value = $value+(card.qt*card.price);
 		if(card.qt > 1)
 		{
-			$qt = "<img src='https://d36mxiodymuqjm.cloudfront.net/website/qty-banner.png' class='w3-display-topright' style='max-height:60px;'><b class='w3-xlarge w3-display-topright w3-margin-right'>"+card.qt+"</b>";
+			$qt = "<img src='"+$link+"website/qty-banner.png' class='w3-display-topright' style='max-height:60px;'><b class='w3-xlarge w3-display-topright w3-margin-right'>"+card.qt+"</b>";
 		}
 		else
 		{
@@ -197,18 +248,18 @@ function Sexify_view(idReward)
 				imgbonus = "";
 		   break;
 		   case 2:
-		   	imgbonus = "<img src='https://d36mxiodymuqjm.cloudfront.net/website/rarity-display_2.png' width='200px;'>";
+		   	imgbonus = "<img src='"+$link+"website/rarity-display_2.png' width='200px;'>";
 		   break;
 		   case 3:
-		   	imgbonus = "<img src='https://d36mxiodymuqjm.cloudfront.net/website/rarity-display_3.png' width='200px;'>";
+		   	imgbonus = "<img src='"+$link+"website/rarity-display_3.png' width='200px;'>";
 		   break;
 		   case 4:
-		   	imgbonus = "<img src='https://d36mxiodymuqjm.cloudfront.net/website/rarity-display_4.png' width='200px;'>";
+		   	imgbonus = "<img src='"+$link+"website/rarity-display_4.png' width='200px;'>";
 		   break;
 		}
 
 		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'>"+imgbonus+"<img width='190px;' src='"+$url+card.img+"' class='w3-display-topmiddle'>"+$qt+"</div>");
 	});
 	$("#spin").addClass(" w3-hide");
-	$("#card_view").append("<div class='w3-display-container w3-leftbar w3-border-red' style='min-width:200px; width:200px; min-height:314px'><b class='w3-display-topmiddle w3-xlarge'>Chest(s) <i class='fas fa-times'></i> "+$coffre+"</b><img width='190px;' src='https://d36mxiodymuqjm.cloudfront.net/website/misc/loot-chest_open_250.png' class='w3-display-middle'><p class='w3-display-bottommiddle w3-xlarge'>(<b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i>)</p></div>");
+	$("#card_view").append("<div class='w3-display-container w3-leftbar w3-rightbar w3-border-orange w3-round-xxlarge' style='min-width:200px; width:200px; min-height:314px'><b class='w3-display-topmiddle w3-xlarge'>Chest(s) <i class='fas fa-times'></i> "+$coffre+"</b><img width='190px;' src='"+$link+"website/misc/loot-chest_open_250.png' class='w3-display-middle'><p class='w3-display-bottommiddle w3-xlarge'><b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></p></div>");
 }
