@@ -211,15 +211,16 @@ function Sexify_view(idReward)
 	$value   = "";
 
 	// Mise en page
-
+	var options = { year: 'numeric', month: 'long', day: 'numeric' };
+   $date = new Intl.DateTimeFormat('default', options).format($date);
 	switch($typequest)
 	{
 		case 'league_season':
-			$("#type_quest").html("<i class='fas fa-gift'></i> "+$pseudo.capitalize()+"'s season rewards - <i class='fas fa-calendar-day'></i> "+$date.toLocaleDateString());
+			$("#type_quest").html("<i class='fas fa-gift'></i> <b>"+$pseudo.capitalize()+"</b>'s season rewards<span class='w3-right w3-margin-right'><i class='fas fa-calendar-day'></i> "+$date+"</span>");
 		break;
 
 		case 'quest':
-			$("#type_quest").html($pseudo.capitalize()+"'s daily quest - <i class='fas fa-calendar-day'></i> "+$date.toLocaleDateString());
+			$("#type_quest").html("<b>"+$pseudo.capitalize()+"</b>'s daily quest<span class='w3-right w3-margin-right'><i class='fas fa-calendar-day'></i> "+$date+"</span>");
 		break;
 
 	}
