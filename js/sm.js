@@ -55,6 +55,11 @@ function encodeURL(str)
   	});
 }
 
+String.prototype.capitalize = function()
+{
+   return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 document.onkeydown = checkKey;
 function checkKey(e)
 {
@@ -62,13 +67,13 @@ function checkKey(e)
 
    if($pseudo != "")
    {
-   	if(e.keyCode == '37')
-		{
-	      $("#btn_left").click();
-	   }
-	   else if(e.keyCode == '39')
+   	if(e.keyCode == '39')
 	   {
 	   	$("#btn_right").click();
+	   }
+	   else if(e.keyCode == '37')
+		{
+	      $("#btn_left").click();
 	   }
    }
 }
@@ -134,23 +139,25 @@ function Sexify_view(idReward)
 	$("#card_view").html("");
 	if(idReward === 0)
 	{
-		$("#menu").html("<button id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> Prev.</button><button id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled>Next <i class='far fa-arrow-alt-circle-right'></i></button>");
+		$("#menu").html("<button type='button' id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left fa-lg'></i> Prev.</button><button type='button' id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled>Next <i class='far fa-arrow-alt-circle-right fa-lg'></i></button>");
 	}
 	else if(idReward === (dataclean.length-1))
 	{
-		$("#menu").html("<button id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled><i class='far fa-arrow-alt-circle-left'></i> Prev.</button><button id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>Next <i class='far fa-arrow-alt-circle-right'></i></button>");
+		$("#menu").html("<button type='button' id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward)+")' disabled><i class='far fa-arrow-alt-circle-left fa-lg'></i> Prev.</button><button type='button' id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>Next <i class='far fa-arrow-alt-circle-right fa-lg'></i></button>");
 	}
 	else
 	{
-		$("#menu").html("<button id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left'></i> Prev.</button><button id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>Next <i class='far fa-arrow-alt-circle-right'></i></button>");
+		$("#menu").html("<button type='button' id='btn_left' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward+1)+")'><i class='far fa-arrow-alt-circle-left fa-lg'></i> Prev.</button><button type='button' id='btn_right' class='w3-button w3-round-large w3-border-black w3-border w3-gray' onclick='Sexify_view("+(idReward-1)+")'>Next <i class='far fa-arrow-alt-circle-right fa-lg'></i></button>");
 	}
 
 	$typequest  = JSON.parse(dataclean[idReward].data).type;
 	$datadecode = JSON.parse(dataclean[idReward].result);
+	$date    = new Date(dataclean[idReward].created_date);
 	$popoLeg = 0;
 	$popoAlc = 0;
 	$dec     = 0;
 	$credit  = 0;
+	$pack    = 0;
 	$coffre  = $datadecode.rewards.length;
 	$cardLst = [];
 
@@ -208,11 +215,11 @@ function Sexify_view(idReward)
 	switch($typequest)
 	{
 		case 'league_season':
-			$("#type_quest").html("<i class='fas fa-gifts'></i> Season Rewards :");
+			$("#type_quest").html("<i class='fas fa-gift'></i> "+$pseudo.capitalize()+"'s season rewards - <i class='fas fa-calendar-day'></i> "+$date.toLocaleDateString());
 		break;
 
 		case 'quest':
-			$("#type_quest").html("<i class='fas fa-gift'></i> Daily Quest :");
+			$("#type_quest").html($pseudo.capitalize()+"'s daily quest - <i class='fas fa-calendar-day'></i> "+$date.toLocaleDateString());
 		break;
 
 	}
