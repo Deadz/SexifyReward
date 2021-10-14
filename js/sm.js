@@ -170,7 +170,9 @@ function Sexify_view(idReward)
 		   	cardgold = item.card.gold;
 		   	if($cardLst.find(card => card.id === cardid && card.gold === cardgold) === undefined)
 		   	{
-		   		dataCardName  = nameinfo.find(data => data.id === cardid); // On cherche le nom de la carte
+		   		// On cherche le nom de la carte
+		   		dataCardName  = nameinfo.find(data => data.id === cardid);
+		   		
 		   		if(cardgold)
 		   		{
 		   			cardName = encodeURL(dataCardName.name)+"_lv1_gold.png"; // On creer l'url de l'image
@@ -179,12 +181,16 @@ function Sexify_view(idReward)
 		   		{
 		   			cardName = encodeURL(dataCardName.name)+"_lv1.png"; // On creer l'url de l'image
 		   		}
-		   		dataCardPrice = prices.find(data => data.card_detail_id === cardid && data.gold === cardgold); // On cherche le prix de la carte
+
+		   		// On cherche le prix de la carte
+		   		dataCardPrice = prices.find(data => data.card_detail_id === cardid && data.gold === cardgold);
+
+		   		// On ajoute les datas
 		   		$cardLst.push({ id : cardid, img : cardName, qt : 1, rarity : dataCardName.rarity, gold : cardgold, price : dataCardPrice.low_price});
 		   	}
 		   	else
 		   	{
-		   		objId = $cardLst.findIndex((card => card.id === cardid));
+		   		objId = $cardLst.findIndex((card => card.id === cardid && card.gold === cardgold));
 		   		$cardLst[objId].qt++; 
 		   	}
 		   break;
