@@ -172,10 +172,17 @@ function Sexify_view(idReward)
 		   	{
 		   		// On cherche le nom de la carte
 		   		dataCardName  = nameinfo.find(data => data.id === cardid);
-		   		
 		   		if(cardgold)
 		   		{
-		   			cardName = encodeURL(dataCardName.name)+"_lv1_gold.png"; // On creer l'url de l'image
+		   			console.error(dataCardName.rarity);
+		   			if(dataCardName.rarity === 1)
+		   			{
+		   				cardName = encodeURL(dataCardName.name)+"_lv3_gold.png"; // On creer l'url de l'image
+		   			}
+		   			else
+		   			{
+		   				cardName = encodeURL(dataCardName.name)+"_lv2_gold.png"; // On creer l'url de l'image
+		   			}
 		   		}
 		   		else
 		   		{
@@ -222,11 +229,11 @@ function Sexify_view(idReward)
 	switch($typequest)
 	{
 		case 'league_season':
-			$("#type_quest").html("<i class='fas fa-gift'></i> <b>"+$pseudo.capitalize()+"</b>'s season rewards<span class='w3-right w3-margin-right'><i class='fas fa-calendar-day'></i> "+$date+"</span>");
+			$("#type_quest").html("<p class='w3-padding-16'><u><b>"+$pseudo.capitalize()+"</b>'s season rewards</u><span class='w3-right w3-margin-right  w3-opacity'><i class='fas fa-calendar-day'></i> "+$date+"</span></p>");
 		break;
 
 		case 'quest':
-			$("#type_quest").html("<b>"+$pseudo.capitalize()+"</b>'s daily quest<span class='w3-right w3-margin-right'><i class='fas fa-calendar-day'></i> "+$date+"</span>");
+			$("#type_quest").html("<p class='w3-padding-16'><u><b>"+$pseudo.capitalize()+"</b>'s daily quest</u><span class='w3-right w3-margin-right w3-opacity'><i class='fas fa-calendar-day'></i> "+$date+"</span></p>");
 		break;
 
 	}
