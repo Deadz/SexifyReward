@@ -1,6 +1,5 @@
 $limit  = 15;
-$url    = "https://d36mxiodymuqjm.cloudfront.net/cards_by_level/reward/";
-$link   = "https://d36mxiodymuqjm.cloudfront.net/";
+$url    = "images/";
 $pseudo = "";
 
 // Data load check
@@ -97,7 +96,25 @@ function cheeeeeese()
 	}).then(canvas =>
 	{
 		$("#copy").html(canvas);
-		document.getElementById('view_screen').style.display='block';
+		canvas.toBlob(function(blob)
+		{
+         navigator.clipboard.write([
+            new ClipboardItem(Object.defineProperty({}, blob.type,
+            {
+               value: blob,
+               enumerable: true
+            }))]).then(function()
+			{
+				$("#screen").prepend("<div class='w3-panel w3-green w3-display-container w3-round-xlarge w3-animate-opacity w3-padding-large' style='position: absolute; left: 50%; transform: translate(-50%, -50%);'><span onclick='this.parentElement.style.display=\"none\"' class='w3-button w3-large w3-display-topright w3-round-xlarge'>&times;</span><h3 class='w3-margin-left w3-margin-right'>The screenshot has been completed and saved in your clipboard.</h3></div>");
+
+      	},
+	      function(error)
+	      {
+	         console.error("Unable to write to clipboard. Error:");
+	         console.log(error);
+	      });
+			// document.getElementById('view_screen').style.display='block';
+		});
 	});
 }
 
@@ -174,7 +191,6 @@ function Sexify_view(idReward)
 		   		dataCardName  = nameinfo.find(data => data.id === cardid);
 		   		if(cardgold)
 		   		{
-		   			console.error(dataCardName.rarity);
 		   			if(dataCardName.rarity === 1)
 		   			{
 		   				cardName = encodeURL(dataCardName.name)+"_lv3_gold.png"; // On creer l'url de l'image
@@ -217,6 +233,9 @@ function Sexify_view(idReward)
 		   case 'credits':
 		   	$credit = $credit+item.quantity;
 		   break;
+		   case 'packs':
+		   	$pack++;
+		   break;
 		}
 	});
 
@@ -239,25 +258,27 @@ function Sexify_view(idReward)
 	}
 
 	if($dec > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/icons/img_dec_fx_256.png'><b class='w3-xlarge w3-display-topmiddle'>DEC(s) <i class='fas fa-times'></i> "+$dec+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='images/dec.png'><b class='w3-xlarge w3-display-topmiddle'>DEC(s) <i class='fas fa-times'></i> "+$dec+"</b></div>");
 
 	if($popoLeg > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/icons/icon_potion_legendary.png'><b class='w3-xlarge w3-display-topmiddle'> Legendary(s)<i class='fas fa-times'></i> "+$popoLeg+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='images/legendary.png'><b class='w3-xlarge w3-display-topmiddle'> Legendary(s)<i class='fas fa-times'></i> "+$popoLeg+"</b></div>");
 
 	if($popoAlc > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/icons/icon_potion_alchemy.png'><b class='w3-xlarge w3-display-topmiddle'> Alchemy(s)<i class='fas fa-times'></i> "+$popoAlc+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='images/alchemy.png'><b class='w3-xlarge w3-display-topmiddle'> Alchemy(s)<i class='fas fa-times'></i> "+$popoAlc+"</b></div>");
 
 	if($credit > 0)
-		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='"+$link+"website/ui_elements/shop/img_credits.png'><b class='w3-xlarge w3-display-topmiddle'> Credit(s)<i class='fas fa-times'></i> "+$credit+"</b></div>");
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='images/credits.png'><b class='w3-xlarge w3-display-topmiddle'> Credit(s)<i class='fas fa-times'></i> "+$credit+"</b></div>");
 
-	$value = ($dec*$decPrice)+($credit/1000)+($popoLeg*0.04)+($popoAlc*0.05);
+	if($pack > 0)
+		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'><img width='175px' class='w3-display-middle' src='images/pack.png'><b class='w3-xlarge w3-display-topmiddle'> Pack(s)<i class='fas fa-times'></i> "+$pack+"</b></div>");
+	$value = ($dec*$decPrice)+($credit/1000)+($popoLeg*0.04)+($popoAlc*0.05)+($pack*4);
 
 	$cardLst.forEach(function(card)
 	{
 		$value = $value+(card.qt*card.price);
 		if(card.qt > 1)
 		{
-			$qt = "<img src='"+$link+"website/qty-banner.png' class='w3-display-topright' style='max-height:60px;'><b class='w3-xlarge w3-display-topright w3-margin-right'>"+card.qt+"</b>";
+			$qt = "<img src='images/qty-banner.png' class='w3-display-topright' style='max-height:60px;'><b class='w3-xlarge w3-display-topright w3-margin-right'>"+card.qt+"</b>";
 		}
 		else
 		{
@@ -269,18 +290,18 @@ function Sexify_view(idReward)
 				imgbonus = "";
 		   break;
 		   case 2:
-		   	imgbonus = "<img src='"+$link+"website/rarity-display_2.png' width='200px;'>";
+		   	imgbonus = "<img src='images/rarity-display_2.png' width='200px;'>";
 		   break;
 		   case 3:
-		   	imgbonus = "<img src='"+$link+"website/rarity-display_3.png' width='200px;'>";
+		   	imgbonus = "<img src='images/rarity-display_3.png' width='200px;'>";
 		   break;
 		   case 4:
-		   	imgbonus = "<img src='"+$link+"website/rarity-display_4.png' width='200px;'>";
+		   	imgbonus = "<img src='images/rarity-display_4.png' width='200px;'>";
 		   break;
 		}
 
 		$("#card_view").append("<div class='w3-display-container' style='min-width:200px; width:200px; min-height:314px'>"+imgbonus+"<img width='190px;' src='"+$url+card.img+"' class='w3-display-topmiddle'>"+$qt+"</div>");
 	});
 	$("#spin").addClass(" w3-hide");
-	$("#card_view").append("<div class='w3-display-container w3-leftbar w3-rightbar w3-border-orange w3-round-xxlarge' style='min-width:200px; width:200px; min-height:314px'><b class='w3-display-topmiddle w3-xlarge'>Chest(s) <i class='fas fa-times'></i> "+$coffre+"</b><img width='190px;' src='"+$link+"website/misc/loot-chest_open_250.png' class='w3-display-middle'><p class='w3-display-bottommiddle w3-xlarge'><b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></p></div>");
+	$("#card_view").append("<div class='w3-display-container w3-leftbar w3-rightbar w3-border-orange w3-round-xxlarge' style='min-width:200px; width:200px; min-height:314px'><b class='w3-display-topmiddle w3-xlarge'>Chest(s) <i class='fas fa-times'></i> "+$coffre+"</b><img width='190px;' src='images/loot-chest_open.png' class='w3-display-middle'><p class='w3-display-bottommiddle w3-xlarge'><b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></p></div>");
 }
