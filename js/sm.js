@@ -120,7 +120,7 @@ function cheeeeeese()
 	});
 }
 
-function kdo()
+function kdo() // Don avec keychain
 {
 	hive_keychain.requestCustomJson(null,"sm_token_transfer", "active",'{"to":"deadzy","qty":50,"token":"DEC","type":"withdraw","app":"sexify"}', "Confirm the donation of 50 DEC.");
 }
@@ -158,7 +158,7 @@ function Sexify()
 
 		$.ajax( // Date quest
 		{
-			url: 'https://api.splinterlands.io/players/quests?username='+$pseudo,
+			url: 'https://api2.splinterlands.com/players/quests?username='+$pseudo,
 			dataType: 'json',
 			type : 'GET',
 			success: function(datas)
@@ -326,4 +326,16 @@ function Sexify_view(idReward)
 
 	$("#spin").addClass(" w3-hide");
 	$("#card_view").append("<div class='w3-display-container w3-leftbar w3-rightbar w3-border-orange w3-round-xxlarge' style='min-width:200px; width:200px; min-height:314px'><b class='w3-display-topmiddle w3-xlarge'>Chest(s) <i class='fas fa-times'></i> "+$coffre+"</b><img width='190px;' src='images/loot-chest_open.png' class='w3-display-middle'><p class='w3-display-bottommiddle w3-xlarge'><b>"+$value.toFixed(2)+"</b><i class='fas fa-dollar-sign'></i></p></div>");
+}
+
+// Menu sidebar
+
+function w3_open()
+{
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function w3_close()
+{
+  document.getElementById("mySidebar").style.display = "none";
 }
